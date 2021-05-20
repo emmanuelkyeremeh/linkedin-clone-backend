@@ -1,12 +1,26 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import mongoose from "mongoose";
+import Grid from "gridfs-stream";
+import UserRouter from "./routes/UserRouter.js";
+import fileRouter from "./routes/fileRouter.js";
 
 dotenv.config();
 
 const app = express();
 
 app.use(cors());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: false }));
+
+app.use((err, req, res, next) => [
+  res.status(500).send({ message: err.message }),
+]);
+
+app.use("/api/users", UserRouter);
+app.use("/api/file", fileRouter);
+
 const PORT = process.env.PORT;
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -21,8 +35,18 @@ connection.on("error", () => {
   console.error.bind(console, "Error: ");
 });
 
+export let GridFs;
+export let GridFsBucket;
+
 connection.once("open", () => {
   console.log("Connected successfully!");
+
+  GridFsBucket = new mongoose.mongo.GridFSBucket(connection.db, {
+    bucketName: "uploads",
+  });
+
+  GridFs = Grid(connection.db, mongoose.mongo);
+  GridFs.collection("uploads");
 });
 
 app.get("/", (req, res) => {
