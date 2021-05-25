@@ -32,7 +32,7 @@ UserRouter.post(
 
 UserRouter.post(
   "/login",
-  expressAsyncHandler((req, res) => {
+  expressAsyncHandler(async (req, res) => {
     const user = await User.findOne({
       email: req.body.email,
     });
@@ -54,7 +54,7 @@ UserRouter.post(
 
 UserRouter.put(
   "/:id",
-  expressAsyncHandler((req, res) => {
+  expressAsyncHandler(async (req, res) => {
     const user = await User.findByIdAndUpdate(req.params.id);
     if (user) {
       user.firstName = req.body.firstName || user.firstName;

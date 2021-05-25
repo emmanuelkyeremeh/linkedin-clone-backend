@@ -27,7 +27,7 @@ const upload = multer({ storage: storage });
 
 fileRouter.post(
   "/",
-  upload.single(image),
+  upload.single("image"),
   expressAsyncHandler((req, res) => {
     res.status(200).send("Image Added!!!!!!");
   })
@@ -35,7 +35,7 @@ fileRouter.post(
 
 fileRouter.get(
   "/:filename",
-  expressAsyncHandler((req, res) => {
+  expressAsyncHandler(async (req, res) => {
     await GridFs.files.findOne(
       { filename: req.params.filename },
       (err, file) => {
@@ -69,7 +69,7 @@ fileRouter.get(
 
 fileRouter.delete(
   "/:filename",
-  expressAsyncHandler((req, res) => {
+  expressAsyncHandler(async (req, res) => {
     await GridFs.remove(
       { filename: req.params.filename, root: "uploads" },
       (error, files) => {

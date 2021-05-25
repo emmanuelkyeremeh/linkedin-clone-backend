@@ -5,8 +5,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": " pm2 start server.js"
+    "start": "node server.js"
   },
   "author": "Emmanuel Kyeremeh",
   "license": "MIT",
