@@ -5,6 +5,17 @@ import mongoose from "mongoose";
 import Grid from "gridfs-stream";
 import UserRouter from "./routes/UserRouter.js";
 import fileRouter from "./routes/fileRouter.js";
+import { Server } from "socket.io";
+import { createServer } from "http";
+
+const server = createServer();
+
+export const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 
 dotenv.config();
 
@@ -53,4 +64,4 @@ app.get("/", (req, res) => {
   res.send("Server Ready!");
 });
 
-app.listen(PORT, () => console.log(`Express app listening on port ${PORT}`));
+server.listen(PORT, () => console.log(`Express app listening on port ${PORT}`));
