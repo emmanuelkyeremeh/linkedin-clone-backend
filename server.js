@@ -6,9 +6,21 @@ import Grid from "gridfs-stream";
 import UserRouter from "./routes/UserRouter.js";
 import fileRouter from "./routes/fileRouter.js";
 import { Server } from "socket.io";
-import { createServer } from "http";
+import http from "http";
 
-const server = createServer();
+dotenv.config();
+
+const app = express();
+
+const server = http.createServer(app);
+
+app.use(cors());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true }));
+
+app.use((err, req, res, next) => [
+  res.status(500).send({ message: err.message }),
+]);
 
 export const io = new Server(server, {
   cors: {
@@ -16,18 +28,6 @@ export const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
-dotenv.config();
-
-const app = express();
-
-app.use(cors());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: false }));
-
-app.use((err, req, res, next) => [
-  res.status(500).send({ message: err.message }),
-]);
 
 app.use("/api/users", UserRouter);
 app.use("/api/file", fileRouter);
