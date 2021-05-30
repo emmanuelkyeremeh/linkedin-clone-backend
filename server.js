@@ -7,12 +7,22 @@ import UserRouter from "./routes/UserRouter.js";
 import fileRouter from "./routes/fileRouter.js";
 import { Server } from "socket.io";
 import http from "http";
+import { socketRoute } from "./routes/socketRoute.js";
 
 dotenv.config();
 
 const app = express();
 
 const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+socketRoute(io);
 
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
@@ -21,13 +31,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use((err, req, res, next) => [
   res.status(500).send({ message: err.message }),
 ]);
-
-export const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
 
 app.use("/api/users", UserRouter);
 app.use("/api/file", fileRouter);
