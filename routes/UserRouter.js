@@ -19,7 +19,7 @@ UserRouter.post(
     });
     const newUser = await user.save();
     res.send({
-      _id: newUser_id,
+      _id: newUser._id,
       firstName: newUser.firstName,
       lastName: newUser.lastName,
       avatar: newUser.avatar,
