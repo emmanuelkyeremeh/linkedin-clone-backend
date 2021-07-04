@@ -1,4 +1,5 @@
 import Post from "../models/PostModel.js";
+import User from "../models/UserModel.js";
 export const socketRoute = (io) => {
   const changeStream = Post.watch();
   changeStream.on("change", (change) => {
@@ -18,6 +19,16 @@ export const socketRoute = (io) => {
     const posts = await Post.find();
     io.emit("getPosts", posts);
 
+    const users = await User.find();
+    socket.emit("users", users);
+
+    // socket.on("getUsers", async () => {
+    //   socket.emit("socket recieved");
+    //   const Users = await User.find();
+    //   socket.emit("users", Users);
+    //   console.log(messageUsers);
+    // });
+
     socket.on("createPost", async (post) => {
       const { userId, time, caption, postImage, postImage_filename } = post;
       const createPost = new Post({
@@ -29,6 +40,10 @@ export const socketRoute = (io) => {
       });
       const newPost = await createPost.save();
       // io.emit("createPostSuccess", newPost);
+    });
+    socket.on("newMessage", (newMessage) => {
+      console.log(newMessage);
+      socket.emit("message recieved!");
     });
   });
 };
