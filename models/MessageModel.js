@@ -6,7 +6,7 @@ const MessageSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   time: { type: String, required: true },
   message: { type: String, required: true },
-  SenderId: { type: String, required: true },
+  senderId: { type: String, required: true },
   receiverId: { type: String, required: true },
 });
 
