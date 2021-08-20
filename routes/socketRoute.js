@@ -76,6 +76,7 @@ export const socketRoute = (io) => {
     });
     socket.on("idProp", (id) => {
       socket.emit("idprop", id);
+      console.log(id);
     });
   });
 };
