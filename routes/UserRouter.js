@@ -33,6 +33,7 @@ UserRouter.post(
 UserRouter.post(
   "/login",
   expressAsyncHandler(async (req, res) => {
+    console.log(req.body);
     const user = await User.findOne({
       email: req.body.email,
     });

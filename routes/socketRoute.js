@@ -59,13 +59,15 @@ export const socketRoute = (io) => {
     });
 
     socket.on("messages", async (data) => {
+      console.log(data);
       const { senderId, receiverId } = data;
       const messages = await Message.find({
-        senderId: senderId,
-        receiverId: receiverId,
+        senderId: senderId || receiverId,
+        receiverId: receiverId || senderId,
       });
       if (messages) {
         socket.emit("Messages", messages);
+        console.log(messages);
       }
     });
     socket.on("singleUser", async (id) => {
